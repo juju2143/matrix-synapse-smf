@@ -5,10 +5,10 @@ __version__ = "0.0.1"
 from twisted.internet import defer
 import logging
 import bcrypt
-import MySQLdb
+import MySQLdb # TODO: support more databases SMF supports
 import atexit
 
-logger = logging.getLogger("synapse") #__name__)
+logger = logging.getLogger(__name__)
 
 class SmfAuthProvider(object):
 	__version__ = "0.0.1"
@@ -34,9 +34,10 @@ class SmfAuthProvider(object):
 		hash = cursor.fetchone()
 		if not hash:
 			defer.returnValue(False)
+		# TODO: support more hash methods
 		if bcrypt.checkpw(localpart.lower()+password, hash[0]):
 			# TODO: check if user is banned
-			# TODO: something about spaces
+			# TODO: something about spaces and special characters, that and ensure there's no duplicates somehow
 			logger.info("Valid password for user %s: %s", localpart, hash[0])
 			if (yield self.account_handler.check_user_exists(user_id)):
 				logger.info("User %s exists, logging in", user_id)
@@ -44,10 +45,11 @@ class SmfAuthProvider(object):
 			else:
 				try:
 					user_id, access_token = (
-						# TODO: admin
+						# TODO: set user as admin
 						yield self.account_handler.register(localpart=localpart)
 					)
 					logger.info("User %s created, logging in", localpart)
+					# TODO: import avatar, display name, email, etc.
 					defer.returnValue(True)
 				except:
 					logger.warning("User %s not created", localpart)

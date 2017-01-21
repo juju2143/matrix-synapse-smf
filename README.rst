@@ -1,8 +1,7 @@
-Synapse SMF Auth Provider
-=========================
+Synapse Simple Machines Forum (SMF) Auth Provider
+=================================================
 
-Allows synapse to use SMF 2.0 as a password provider.
-
+Allows synapse to use SMF 2.1 (or 2.0 with Sorunome's bcrypt mod) forum accounts from its database as a password provider.
 
 Usage
 -----
